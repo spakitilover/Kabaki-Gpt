@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import { OpenAiModels } from "../../models/models";
 import { useNavigation } from "@react-navigation/native";
@@ -18,55 +19,57 @@ const Homes = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.navbar}>
-        <View>
+      <ScrollView>
+        <View style={styles.navbar}>
+          <View>
+            <Image
+              source={{
+                uri: "https://static.thenounproject.com/png/658934-200.png",
+              }}
+              style={{ width: 30, height: 30 }}
+            />
+          </View>
+
           <Image
-            source={{
-              uri: "https://static.thenounproject.com/png/658934-200.png",
-            }}
+            source={require("../../assets/kabakiLogo.png")}
             style={{ width: 30, height: 30 }}
           />
         </View>
 
-        <Image
-          source={require("../../assets/kabakiLogo.png")}
-          style={{ width: 30, height: 30 }}
-        />
-      </View>
-
-      <View style={styles.wrapper}>
-        {OpenAiModels.map((item) => (
-          <View style={styles.boxWrapper}>
-            <View
-              style={{
-                width: 70,
-                height: 70,
-                borderRadius: 10,
-                backgroundColor: item.color,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                source={{
-                  uri: item.img,
+        <View style={styles.wrapper}>
+          {OpenAiModels.map((item) => (
+            <View style={styles.boxWrapper}>
+              <View
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderRadius: 10,
+                  backgroundColor: item.color,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                style={{ width: 30, height: 30 }}
-              />
+              >
+                <Image
+                  source={{
+                    uri: item.img,
+                  }}
+                  style={{ width: 30, height: 30 }}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.textWrapper}
+                onPress={() => handleSelectModel(item)}
+              >
+                <Text style={styles.text}>{item.name}</Text>
+                <Text numberOfLines={1} style={{ color: "gray" }}>
+                  {item.desc}
+                </Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.textWrapper}
-              onPress={() => handleSelectModel(item)}
-            >
-              <Text style={styles.text}>{item.name}</Text>
-              <Text numberOfLines={1} style={{ color: "gray" }}>
-                {item.desc}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

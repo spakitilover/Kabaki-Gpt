@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Configuration, OpenAIApi } from "openai";
 
@@ -17,104 +18,106 @@ const Chat = ({ route }) => {
   const [result, setResult] = useState("");
 
   const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
     organization: "org-KsksXMCjrO4toFrzVZApDaIY",
   });
-
-  const headers = {
-    Authorization: `Bearer ${"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"}`,
-  };
 
   const openai = new OpenAIApi(configuration);
 
   const handleSearch = async () => {
     let qust = { ...route.params.opt, prompt: input };
 
-    const response = await openai.createCompletion(qust);
-
-    setResult(response.data.choices[0].text);
-    console.log(response);
+    try {
+      const response = await openai.createCompletion(qust);
+      setResult(response.data.choices[0].text);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.navbar}>
-        <View>
-          <Image
-            source={{
-              uri: "https://static.thenounproject.com/png/658934-200.png",
-            }}
-            style={{ width: 30, height: 30 }}
-          />
-        </View>
-        <Text style={{ fontWeight: "400", fontSize: 16 }}>Home</Text>
-        <Image
-          source={require("../../assets/kabakiLogo.png")}
-          style={{ width: 30, height: 30 }}
-        />
-      </View>
-      <View style={{ padding: 20 }}>
-        <View style={styles.boxWrapper}>
-          <View
-            style={{
-              width: 70,
-              height: 70,
-              borderRadius: 10,
-              backgroundColor: route.params.rest.color,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 15,
-            }}
-          >
+      <ScrollView>
+        <View style={styles.navbar}>
+          <View>
             <Image
               source={{
-                uri: route.params.rest.img,
+                uri: "https://static.thenounproject.com/png/658934-200.png",
               }}
               style={{ width: 30, height: 30 }}
             />
           </View>
-          <TouchableOpacity style={styles.textWrapper}>
-            <Text style={styles.text}>{route.params.rest.name}</Text>
-            <Text style={{ color: "gray" }}>{route.params.rest.desc}</Text>
-          </TouchableOpacity>
+          <Text style={{ fontWeight: "400", fontSize: 16 }}>Home</Text>
+          <Image
+            source={require("../../assets/kabakiLogo.png")}
+            style={{ width: 30, height: 30 }}
+          />
         </View>
-      </View>
-      <View style={styles.inputWrapper}>
-        <TextInput
-          style={styles.input}
-          placeholder="What's in your mind ..."
-          keyboardType="numeric"
-          numberOfLines={5}
-          editable
-          multiline
-          onChangeText={(text) => setInput(text)}
-        />
-      </View>
-      <View style={styles.btnWrapper}>
-        <Text style={styles.btn} onPress={handleSearch}>
-          {" "}
-          Search
-        </Text>
-      </View>
-      {result.length < 1 ? (
-        <View style={styles.logoWrapper}>
-          <Text style={{ fontSize: 16, color: "white" }}>No Results !</Text>
+        <View style={{ padding: 20 }}>
+          <View style={styles.boxWrapper}>
+            <View
+              style={{
+                width: 70,
+                height: 70,
+                borderRadius: 10,
+                backgroundColor: route.params.rest.color,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 15,
+              }}
+            >
+              <Image
+                source={{
+                  uri: route.params.rest.img,
+                }}
+                style={{ width: 30, height: 30 }}
+              />
+            </View>
+            <TouchableOpacity style={styles.textWrapper}>
+              <View
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.text}>{route.params.rest.name}</Text>
+              </View>
+
+              <Text style={{ color: "gray" }}>{route.params.rest.desc}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      ) : (
-        <View style={styles.logoWrapper}>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "white",
-              textAlign: "center",
-              padding: 10,
-            }}
-          >
-            {result}
-          </Text>
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.input}
+            placeholder="What's in your mind ..."
+            multiline
+            onChangeText={(text) => setInput(text)}
+          />
         </View>
-      )}
+        <View style={styles.btnWrapper}>
+          <Button onPress={handleSearch} title="click me" />
+        </View>
+        {result.length < 1 ? (
+          <View style={styles.logoWrapper}>
+            <Text style={{ fontSize: 16, color: "white" }}>No Results !</Text>
+          </View>
+        ) : (
+          <View style={styles.logoWrapper}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: "white",
+                textAlign: "center",
+                padding: 10,
+              }}
+            >
+              {result}
+            </Text>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -140,17 +143,17 @@ const styles = StyleSheet.create({
   input: {
     height: 300,
     margin: 12,
-    borderWidth: 1,
-    borderColor: "#C576F6",
     padding: 10,
-    borderRadius: 2,
+
+    borderColor: "white",
+    borderWidth: 1,
     fontSize: 18,
     color: "white",
   },
 
   inputWrapper: {
     padding: 5,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   btnWrapper: {
     display: "flex",
@@ -159,13 +162,12 @@ const styles = StyleSheet.create({
   },
   btn: {
     borderWidth: 1,
-    borderColor: "#C576F6",
+    borderColor: "yellow",
     borderRadius: 50,
     width: 200,
     padding: 15,
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
     fontWeight: 500,
     fontSize: 16,
     color: "white",
